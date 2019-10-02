@@ -310,6 +310,26 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
         emit EmergencyRecovery(_authorizedAddress, _cosigner);
     }
 
+    function emergencyRecovery2(address _authorizedAddress, uint256 _cosigner, address _recoveryAddress) external onlyRecoveryAddress {
+            require(_authorizedAddress != address(0), "Authorized addresses must not be zero.");
+            require(_authorizedAddress != _recoveryAddress, "Do not use the recovery address as an authorized address.");
+            require(address(_cosigner) != address(0), "The cosigner must not be zero.");
+
+            // Incrementing the authVersion number effectively erases the authorizations mapping. See the comments
+            // on the authorizations variable (above) for more information.
+            authVersion += AUTH_VERSION_INCREMENTOR;
+
+            // Store the new signer/cosigner pair as the only remaining authorized address
+            authorizations[authVersion + uint256(_authorizedAddress)] = _cosigner;
+
+            // set new recovery address
+            address previous = recoveryAddress;
+            recoveryAddress = _recoveryAddress;
+
+            emit RecoveryAddressChanged(previous, recoveryAddress);
+            emit EmergencyRecovery(_authorizedAddress, _cosigner);
+     }
+
     /// @notice Sets the recovery address, which can be zero (indicating that no recovery is possible)
     ///  Can be updated by any authorized address. This address should be set with GREAT CARE. See the
     ///  comments above about the proper kinds of addresses to use as the recoveryAddress to ensure this
@@ -483,7 +503,7 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
         require(signer != address(0), "Invalid signature.");
 
         // check nonce
-        require(nonce == nonces[signer], "must use correct nonce");
+        require(nonce > nonces[signer], "must use valid nonce for signer");
 
         // check signer
         require(signer == authorizedAddress, "authorized addresses must be equal");
@@ -496,7 +516,7 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
         require(requiredCosigner == signer || requiredCosigner == msg.sender, "Invalid authorization.");
 
         // increment nonce to prevent replay attacks
-        nonces[signer] = nonce + 1;
+        nonces[signer] = nonce;
 
         // call internal function
         internalInvoke(operationHash, data);
@@ -581,7 +601,7 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
         require(signer == authorizedAddress, "authorized addresses must be equal");
 
         // check nonces
-        require(nonce == nonces[signer], "must use correct nonce for signer");
+        require(nonce > nonces[signer], "must use valid nonce for signer");
 
         // Get Mapping
         address requiredCosigner = address(authorizations[authVersion + uint256(signer)]);
@@ -591,7 +611,7 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
         require(requiredCosigner == signer || requiredCosigner == cosigner, "Invalid authorization.");
 
         // increment nonce to prevent replay attacks
-        nonces[signer]++;
+        nonces[signer] = nonce;
 
         internalInvoke(operationHash, data);
     }
