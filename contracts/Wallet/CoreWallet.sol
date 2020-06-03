@@ -203,6 +203,37 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
         emit Authorized(_authorizedAddress, _cosigner);
     }
 
+    function bytesToAddresses(bytes memory bys) private pure returns (address[] memory addresses) {
+            addresses = new address[](bys.length/20);
+            for (uint i=0; i < bys.length; i+=20) {
+                address addr;
+                uint end = i+20;
+                assembly {
+                  addr := mload(add(bys,end))
+                }
+                addresses[i/20] = addr;
+            }
+        }
+
+    function init2(bytes memory _authorizedAddresses, uint256 _cosigner, address _recoveryAddress) public onlyOnce {
+        address[] memory addresses = bytesToAddresses(_authorizedAddresses);
+        for (uint i=0; i < addresses.length; i++) {
+            address _authorizedAddress = addresses[i];
+            require(_authorizedAddress != _recoveryAddress, "Do not use the recovery address as an authorized address.");
+            require(address(_cosigner) != _recoveryAddress, "Do not use the recovery address as a cosigner.");
+            require(_authorizedAddress != address(0), "Authorized addresses must not be zero.");
+            require(address(_cosigner) != address(0), "Initial cosigner must not be zero.");
+
+            recoveryAddress = _recoveryAddress;
+            // set initial authorization value
+            authVersion = AUTH_VERSION_INCREMENTOR;
+            // add initial authorized address
+            authorizations[authVersion + uint256(_authorizedAddress)] = _cosigner;
+
+            emit Authorized(_authorizedAddress, _cosigner);
+        }
+    }
+
     /// @notice The fallback function, invoked whenever we receive a transaction that doesn't call any of our
     ///  named functions. In particular, this method is called when we are the target of a simple send
     ///  transaction, when someone calls a method we have dynamically added a delegate for, or when someone

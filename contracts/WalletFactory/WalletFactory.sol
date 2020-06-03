@@ -87,6 +87,51 @@ contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
         emit WalletCreated(clone, _authorizedAddress, false);   
     }
 
+    function deployCloneWallet2WithMultiAuthorizedAddress(
+            address _recoveryAddress,
+            bytes memory _authorizedAddresses,
+            uint256 _cosigner,
+            bytes32 _salt
+        )
+            public
+        {
+            require(_authorizedAddresses.length / 20 > 0 && _authorizedAddresses.length % 20 == 0, "invalid address byte array");
+            address[] memory addresses = bytesToAddresses(_authorizedAddresses);
+
+            // calculate our own salt based off of args
+            bytes32 salt = keccak256(abi.encodePacked(_salt, addresses[0], _cosigner, _recoveryAddress));
+            // create the clone counterfactually
+            address payable clone = createClone2(cloneWalletAddress, salt);
+            // ensure we get an address
+            require(clone != address(0), "wallet must have address");
+
+            // check size
+            uint256 size;
+            // note this takes an additional 700 gas
+            assembly {
+                size := extcodesize(clone)
+            }
+
+            require(size > 0, "wallet must have code");
+
+            // init the clone
+            CloneableWallet(clone).init2(_authorizedAddresses, _cosigner, _recoveryAddress);
+            // emit event
+            emit WalletCreated(clone, addresses[0], false);
+        }
+
+    function bytesToAddresses(bytes memory bys) private pure returns (address[] memory addresses) {
+        addresses = new address[](bys.length/20);
+        for (uint i=0; i < bys.length; i+=20) {
+            address addr;
+            uint end = i+20;
+            assembly {
+              addr := mload(add(bys,end))
+            }
+            addresses[i/20] = addr;
+        }
+    }
+
     /// @notice Used to deploy a full wallet
     /// @dev This is potentially very gas intensive!
     /// @param _recoveryAddress The initial recovery address for the wallet
