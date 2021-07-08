@@ -2,6 +2,7 @@ pragma solidity ^0.5.10;
 
 import "../ERC721/ERC721Receivable.sol";
 import "../ERC223/ERC223Receiver.sol";
+import "../ERC1155/ERC1155TokenReceiver.sol";
 import "../ERC1271/ERC1271.sol";
 import "../ECDSA.sol";
 
@@ -20,7 +21,7 @@ import "../ECDSA.sol";
 ///  implemented here) is negligable even if you don't need the cosigner functionality, and
 ///  (B) two-of-two multisig (as implemented here) handles a lot of really common use cases, most
 ///  notably third-party gas payment and off-chain blacklisting and fraud detection.
-contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
+contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271, ERC1155TokenReceiver {
 
     using ECDSA for bytes;
 
@@ -480,6 +481,7 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271 {
             interfaceID == ERC721_RECEIVED_FINAL || // ERC721 Final
             interfaceID == ERC721_RECEIVED_DRAFT || // ERC721 Draft
             interfaceID == ERC223_ID || // ERC223
+            interfaceID == ERC1155_TOKEN_RECIEVER || // ERC1155 Token Reciever
             interfaceID == ERC1271_VALIDSIGNATURE // ERC1271
         ) {
             return true;
