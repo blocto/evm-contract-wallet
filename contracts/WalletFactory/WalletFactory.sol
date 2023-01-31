@@ -66,7 +66,7 @@ contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
         public
     {
         // calculate our own salt based off of args
-        bytes32 salt = keccak256(abi.encodePacked(_salt, _authorizedAddress, _cosigner, _recoveryAddress));
+        bytes32 salt = keccak256(abi.encodePacked(_salt, _cosigner, _recoveryAddress));
         // create the clone counterfactually
         address payable clone = createClone2(cloneWalletAddress, salt);
         // ensure we get an address
@@ -99,7 +99,7 @@ contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
             address[] memory addresses = bytesToAddresses(_authorizedAddresses);
 
             // calculate our own salt based off of args
-            bytes32 salt = keccak256(abi.encodePacked(_salt, addresses[0], _cosigner, _recoveryAddress));
+            bytes32 salt = keccak256(abi.encodePacked(_salt, _cosigner, _recoveryAddress));
             // create the clone counterfactually
             address payable clone = createClone2(cloneWalletAddress, salt);
             // ensure we get an address
