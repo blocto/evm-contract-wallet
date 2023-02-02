@@ -7,6 +7,7 @@
     "test": "test"
   },
   "dependencies": {
+    "@truffle/hdwallet-provider": "^2.1.4",
     "bluebird": "^3.5.1",
     "bn": "^1.0.3",
     "chai": "^4.1.2",
@@ -37,6 +38,10 @@
     "deploy-rinkeby": "./node_modules/.bin/truffle migrate -f 2 --network rinkeby",
     "deploy-tt": "./node_modules/.bin/truffle migrate -f 2 --network thunder",
     "deploy-klaytn": "./node_modules/.bin/truffle migrate -f 2 --network klaytn",
+    "deploy-sepolia": "./node_modules/.bin/truffle migrate -f 2 --network sepolia",
+    "deploy-mumbai": "./node_modules/.bin/truffle migrate -f 2 --network mumbai",
+    "deploy-bsc-testnet": "./node_modules/.bin/truffle migrate -f 2 --network bsc_testnet",
+    "deploy-avalanche-testnet": "./node_modules/.bin/truffle migrate -f 2 --network avalanche_testnet",
     "coverage": "./node_modules/.bin/solidity-coverage"
   },
   "repository": {
