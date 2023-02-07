@@ -10,6 +10,8 @@ import "./FullWalletByteCode.sol";
 /// @dev A contract for creating wallets. 
 contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
 
+    /// @notice This is the version of the contract. Fixed with the core wallet contract
+    string public constant VERSION = "1.2.0";
     /// @dev Pointer to a pre-deployed instance of the Wallet contract. This
     ///  deployment contains all the Wallet code.
     address public cloneWalletAddress;

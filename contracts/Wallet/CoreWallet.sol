@@ -31,7 +31,7 @@ contract CoreWallet is ERC721Receivable, ERC223Receiver, ERC1271, ERC1155TokenRe
     byte public constant EIP191_PREFIX = byte(0x19);
 
     /// @notice This is the version of the contract.
-    string public constant VERSION = "1.1.0";
+    string public constant VERSION = "1.2.0";
 
     /// @notice This is a sentinel value used to determine when a delegate is set to expose 
     ///  support for an interface containing more than a single function. See `delegates` and
