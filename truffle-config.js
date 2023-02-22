@@ -1,8 +1,15 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
-const {SAME_ADDR_KEY, SAME_ADDR, ETHEREUM_URL, SEPOLIA_URL,
-      ETHERSCAN_API_KEY, POLYGONSCAN_API_KEY, BSCSCAN_API_KEY, SNOWTRACE_API_KEY} = process.env;
-
+const {
+  SAME_ADDR, // for consistent EVM address 
+  SAME_ADDR_KEY, // for consistent EVM address KEY
+  ETHEREUM_URL, // ETHEREUM provider URL
+  SEPOLIA_URL, // SEPOLIA provider URL
+  ETHERSCAN_API_KEY, // etherscan API KEY
+  POLYGONSCAN_API_KEY, // polygonscan API KEY
+  BSCSCAN_API_KEY, // bscscan API KEY
+  SNOWTRACE_API_KEY, // avalanche scan (snowtrace) API KEY
+} = process.env;
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -10,12 +17,8 @@ module.exports = {
   networks: {
     // mainnet config
     ethereum: {
-      provider: new HDWalletProvider(
-        SAME_ADDR_KEY,
-        ETHEREUM_URL
-      ),
+      provider: new HDWalletProvider(SAME_ADDR_KEY, ETHEREUM_URL),
       network_id: 1,
-      url: ETHEREUM_URL,
       from: SAME_ADDR,
       gas: 4000000, // 4M
       gasPrice: 29800000000, // 29.8 gwei
@@ -32,10 +35,7 @@ module.exports = {
     },
     polygon: {
       provider: () =>
-        new HDWalletProvider(
-          SAME_ADDR_KEY,
-          `https://rpc.ankr.com/polygon`
-        ),
+        new HDWalletProvider(SAME_ADDR_KEY, `https://rpc.ankr.com/polygon`),
       network_id: 137,
       confirmations: 2,
       timeoutBlocks: 1000,
@@ -54,12 +54,8 @@ module.exports = {
     },
     // testnet config
     sepolia: {
-      provider: new HDWalletProvider(
-        SAME_ADDR_KEY,
-        SEPOLIA_URL
-      ),
+      provider: new HDWalletProvider(SAME_ADDR_KEY, SEPOLIA_URL),
       network_id: 11155111,
-      url: SEPOLIA_URL,
       from: SAME_ADDR,
       gas: 8000000, // 8M
       gasPrice: 32000000000, // 32 gwei
@@ -107,10 +103,7 @@ module.exports = {
     },
 
     development: {
-      provider: new HDWalletProvider(
-        SAME_ADDR_KEY,
-        "http://localhost:7545"
-      ),
+      provider: new HDWalletProvider(SAME_ADDR_KEY, "http://localhost:7545"),
       host: "127.0.0.1",
       port: 7545,
       gas: 10000000, // Gas limit used for deploys
@@ -126,11 +119,11 @@ module.exports = {
   },
   api_keys: {
     etherscan: ETHERSCAN_API_KEY,
-    polygonscan:  POLYGONSCAN_API_KEY,
+    polygonscan: POLYGONSCAN_API_KEY,
     bscscan: BSCSCAN_API_KEY,
     snowtrace: SNOWTRACE_API_KEY,
   },
-  plugins: ['truffle-plugin-verify'],
+  plugins: ["truffle-plugin-verify"],
   mocha: {
     bail: true,
   },
