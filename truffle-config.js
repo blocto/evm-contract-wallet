@@ -1,4 +1,3 @@
-require("dotenv").config();
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const {SAME_ADDR_KEY, SAME_ADDR, ETHEREUM_URL, SEPOLIA_URL,
