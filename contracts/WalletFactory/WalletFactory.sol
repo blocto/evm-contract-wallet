@@ -10,6 +10,8 @@ import "./FullWalletByteCode.sol";
 /// @dev A contract for creating wallets. 
 contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
 
+    /// @notice This is the version of the contract. Fixed with the core wallet contract
+    string public constant VERSION = "1.2.0";
     /// @dev Pointer to a pre-deployed instance of the Wallet contract. This
     ///  deployment contains all the Wallet code.
     address public cloneWalletAddress;
@@ -66,7 +68,7 @@ contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
         public
     {
         // calculate our own salt based off of args
-        bytes32 salt = keccak256(abi.encodePacked(_salt, _authorizedAddress, _cosigner, _recoveryAddress));
+        bytes32 salt = keccak256(abi.encodePacked(_salt, _cosigner, _recoveryAddress));
         // create the clone counterfactually
         address payable clone = createClone2(cloneWalletAddress, salt);
         // ensure we get an address
@@ -99,7 +101,7 @@ contract WalletFactory is FullWalletByteCode, HasNoEther, CloneFactory {
             address[] memory addresses = bytesToAddresses(_authorizedAddresses);
 
             // calculate our own salt based off of args
-            bytes32 salt = keccak256(abi.encodePacked(_salt, addresses[0], _cosigner, _recoveryAddress));
+            bytes32 salt = keccak256(abi.encodePacked(_salt, _cosigner, _recoveryAddress));
             // create the clone counterfactually
             address payable clone = createClone2(cloneWalletAddress, salt);
             // ensure we get an address
