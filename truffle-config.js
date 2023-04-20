@@ -1,7 +1,7 @@
 const HDWalletProvider = require("@truffle/hdwallet-provider");
 
 const {
-  SAME_ADDR, // for consistent EVM address 
+  SAME_ADDR, // for consistent EVM address
   SAME_ADDR_KEY, // for consistent EVM address KEY
   ETHEREUM_URL, // ETHEREUM provider URL
   SEPOLIA_URL, // SEPOLIA provider URL
@@ -9,6 +9,8 @@ const {
   POLYGONSCAN_API_KEY, // polygonscan API KEY
   BSCSCAN_API_KEY, // bscscan API KEY
   SNOWTRACE_API_KEY, // avalanche scan (snowtrace) API KEY
+  OPSCAN_API_KEY, // optimistic scan API KEY
+  ARBSCAN_API_KEY, // arbitrum scan API KEY
 } = process.env;
 
 module.exports = {
@@ -92,6 +94,24 @@ module.exports = {
       gas: 5000000, // 5M
       gasPrice: 10000000000, // 10 gwei
     },
+    optimism: {
+      provider: new HDWalletProvider(
+        SAME_ADDR_KEY,
+        "https://mainnet.optimism.io"
+      ),
+      network_id: 10,
+      from: SAME_ADDR,
+      gasPrice: 2000000, // 0.002GWEI
+    },
+    arbitrum: {
+      provider: new HDWalletProvider(
+        SAME_ADDR_KEY,
+        "https://arb1.arbitrum.io/rpc"
+      ),
+      network_id: 42161,
+      from: SAME_ADDR,
+      gasPrice: 200000000, // 0.2 gwei
+    },
     avalanche_testnet: {
       provider: new HDWalletProvider(
         SAME_ADDR_KEY,
@@ -100,6 +120,24 @@ module.exports = {
       network_id: 43113,
       from: SAME_ADDR,
       gasPrice: 25000000000, // 25 nAVAX
+    },
+    optimism_testnet: {
+      provider: new HDWalletProvider(
+        SAME_ADDR_KEY,
+        "https://goerli.optimism.io"
+      ),
+      network_id: 420,
+      from: SAME_ADDR,
+      gasPrice: 2000000, // 0.002GWEI
+    },
+    arbitrum_testnet: {
+      provider: new HDWalletProvider(
+        SAME_ADDR_KEY,
+        "https://goerli-rollup.arbitrum.io/rpc"
+      ),
+      network_id: 421613,
+      from: SAME_ADDR,
+      gasPrice: 200000000, // 0.2 gwei
     },
 
     development: {
@@ -122,6 +160,11 @@ module.exports = {
     polygonscan: POLYGONSCAN_API_KEY,
     bscscan: BSCSCAN_API_KEY,
     snowtrace: SNOWTRACE_API_KEY,
+    goerli_opscan: OPSCAN_API_KEY,
+    opscan: OPSCAN_API_KEY,
+    goerli_arbiscan: ARBSCAN_API_KEY,
+    arbscan: ARBSCAN_API_KEY,
+    arbiscan: ARBSCAN_API_KEY,
   },
   plugins: ["truffle-plugin-verify"],
   mocha: {

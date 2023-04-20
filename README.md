@@ -102,3 +102,15 @@ This operation is intended to be executed in the scenario where all the users de
 The user can then rotate the `backup key` and `recovery transaction` via their new `device key`.
 
 For questions, inquiries or more please email support@meetdapper.com
+
+### Troubleshooting
+
+If deploy second contract (WalletFactory) fail, don't worry, using following command
+```
+npx truffle migrate -f 3 --network [network]
+```
+
+Directly verify contract
+```
+truffle run verify CloneableWallet@[address] --network [network]
+```
