@@ -1,13 +1,10 @@
 // /**
-//  * These are not strictly needed for tests; however since the tests
-//  * run deployments anyways it is nice to know that the contracts deploy, as 
-//  * it seems there are issues you can unearth when attempting to deploy
+//  * If deploy second contract (WalletFactory) fail, you can use this script to deploy it.
 //  */
 
 var WalletFactory = artifacts.require("./WalletFactory/WalletFactory.sol");
-var CloneableWallet = artifacts.require('./Wallet/CloneableWallet.sol');
-
+var CloneableWallet = artifacts.require("./Wallet/CloneableWallet.sol");
 
 module.exports = function (deployer) {
-    deployer.deploy(WalletFactory, "0x2B7c55A5abA0667eeC775b3Fac044Fcc0387Fd83");
+  deployer.deploy(WalletFactory, "0x2B7c55A5abA0667eeC775b3Fac044Fcc0387Fd83");
 };

@@ -103,8 +103,6 @@ The user can then rotate the `backup key` and `recovery transaction` via their n
 
 For questions, inquiries or more please email support@meetdapper.com
 
-
-
 ### Troubleshooting
 
 If deploy second contract (WalletFactory) fail, don't worry, using following command
